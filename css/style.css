@@ -242,8 +242,8 @@ html {
     width: 30px;
     height: 50px;
     border-radius: 10px;
-    background-image: url(/sprite/tire-texture.jpg);
-    background-size: contain;
+    background-image: url(/sprite/tire-texture.png);
+    background-size: cover;
     animation: 0.075s infinite tire, effectJump 1s infinite 0.5s;
 }
 /* CRANKSHAFT */

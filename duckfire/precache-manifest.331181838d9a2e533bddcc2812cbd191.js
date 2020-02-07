@@ -5,26 +5,26 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   },
   {
     "revision": "23ae39c069135def07d8",
-    "url": "/static/css/main.a3920115.chunk.css"
+    "url": "/duckfire/static/css/main.a3920115.chunk.css"
   },
   {
     "revision": "7a6eddaa9d38e2d71ce1",
-    "url": "/static/js/2.46c0e31b.chunk.js"
+    "url": "/duckfire/static/js/2.46c0e31b.chunk.js"
   },
   {
     "revision": "e928fe768baa9832b5bc57eae021f30c",
-    "url": "/static/js/2.46c0e31b.chunk.js.LICENSE"
+    "url": "/duckfire/static/js/2.46c0e31b.chunk.js.LICENSE"
   },
   {
     "revision": "23ae39c069135def07d8",
-    "url": "/static/js/main.956013db.chunk.js"
+    "url": "/duckfire/static/js/main.956013db.chunk.js"
   },
   {
     "revision": "2bbe25e317132a000666",
-    "url": "/static/js/runtime-main.c50f908d.js"
+    "url": "/duckfire/static/js/runtime-main.c50f908d.js"
   },
   {
     "revision": "4df1288f291483888d23f71b9db5b566",
-    "url": "/static/media/coin.4df1288f.svg"
+    "url": "/duckfire/static/media/coin.4df1288f.svg"
   }
 ]);

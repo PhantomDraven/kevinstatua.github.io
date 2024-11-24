@@ -200,10 +200,12 @@
         </section>
 
         <div 
-            x-data="{ currentIndex: 0, slides: ['Gaming', 'Painting', 'Fitness and Motorbiking', 'Dungeon Master'] }" 
+            x-data="slider()"
             class="relative overflow-hidden w-full group mb-10 pb-6" 
             @keydown.arrow-right="currentIndex = (currentIndex + 1) % slides.length" 
-            @keydown.arrow-left="currentIndex = (currentIndex - 1 + slides.length) % slides.length" 
+            @keydown.arrow-left="currentIndex = (currentIndex - 1 + slides.length) % slides.length"
+            @touchstart="handleTouchStart($event)" 
+            @touchend="handleTouchEnd($event)"
             tabindex="0"
         >
             <div class="flex transition-transform duration-500" 
@@ -238,6 +240,39 @@
                 </template>
             </div>
         </div>
+        <script>
+            function slider() {
+                return {
+                    currentIndex: 0,
+                    slides: ['Gaming', 'Painting', 'Fitness and Motorbiking', 'Dungeon Master'],
+                    startX: 0,
+                    endX: 0,
+                    handleTouchStart(event) {
+                        this.startX = event.touches[0].clientX;
+                    },
+                    handleTouchEnd(event) {
+                        this.endX = event.changedTouches[0].clientX;
+                        this.handleSwipe();
+                    },
+                    handleSwipe() {
+                        const deltaX = this.endX - this.startX;
+                        if (Math.abs(deltaX) > 50) {
+                            if (deltaX > 0) {
+                                this.prevSlide();
+                            } else {
+                                this.nextSlide();
+                            }
+                        }
+                    },
+                    nextSlide() {
+                        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                    },
+                    prevSlide() {
+                        this.currentIndex = (this.currentIndex - 1 + this.slides.length) % this.slides.length;
+                    }
+                }
+            }
+        </script>
 
         <section class="pt-8 mb-8 text-center" @keydown.enter="isOpenModal = true">
             <button 

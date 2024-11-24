@@ -37,6 +37,13 @@
             gtag('config', 'UA-125710007-1');
         }
     </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://play.google.com">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net/npm/alpinejs@3.14.2/dist/cdn.min.js">
 </head>
 <body
     class="flex flex-col min-h-screen bg-background text-text"
@@ -45,10 +52,10 @@
     <header class="py-6 border-b">
         <div class="container relative mx-auto px-6">
             <h1 class="text-4xl font-bold">Kevin Statua</h1>
-            <p class="text-lg">Javascript Developer - <span class="font-bold">GoLang Junior - k8s lover</span> | Chief Operating Officer</p>
+            <p class="text-lg mt-4 sm:mt-0">Javascript Developer - <span class="font-bold">GoLang Junior - k8s lover</span> | Chief Operating Officer</p>
             <div class="absolute top-0 right-0 mr-6">
                 <div 
-                    class="relative w-20 h-8 rounded-[50px] border cursor-pointer"
+                    class="relative w-20 h-8 rounded-[50px] border cursor-pointer hidden lg:block"
                     :class="{ 'border-text': darkMode, 'border-background': !darkMode }"
                     @click="darkMode = !darkMode"
                 >
@@ -57,7 +64,7 @@
                         :class="{ 'translate-x-[46px]': !darkMode }"
                     >
                         <span :class="{ 'hidden' : !darkMode }">
-                            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                   <radialGradient id="gradientSun" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
                                     <stop offset="0%" style="stop-color:yellow; stop-opacity:1" />
@@ -68,7 +75,7 @@
                             </svg>
                         </span>
                         <span :class="{ 'hidden' : darkMode }">
-                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
                                   <radialGradient id="gradientMoon" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
                                     <stop offset="0%" style="stop-color:white; stop-opacity:1" />
@@ -80,6 +87,34 @@
                             </svg>
                         </span>
                     </div>
+                </div>
+                <div
+                    class="rounded-[50px]cursor-pointer block lg:hidden"
+                    @click="darkMode = !darkMode"
+                >
+                    <span :class="{ 'hidden' : !darkMode }">
+                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                              <radialGradient id="gradientSun2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" style="stop-color:yellow; stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:orange; stop-opacity:1" />
+                              </radialGradient>
+                            </defs>
+                            <circle cx="12" cy="12" r="12" fill="url(#gradientSun2)" />
+                        </svg>
+                    </span>
+                    <span :class="{ 'hidden' : darkMode }">
+                        <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                              <radialGradient id="gradientMoon2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                <stop offset="0%" style="stop-color:white; stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:gray; stop-opacity:1" />
+                              </radialGradient>
+                            </defs>
+                            <circle cx="12" cy="12" r="12" fill="url(#gradientMoon2)" />
+                            <circle cx="21" cy="12" r="12" fill="#f4f4f0" />
+                        </svg>
+                    </span>
                 </div>
             </div>
         </div>
@@ -166,7 +201,7 @@
 
         <div 
             x-data="{ currentIndex: 0, slides: ['Gaming', 'Painting', 'Fitness and Motorbiking', 'Dungeon Master'] }" 
-            class="relative overflow-hidden w-full group mb-10 pb-4" 
+            class="relative overflow-hidden w-full group mb-10 pb-6" 
             @keydown.arrow-right="currentIndex = (currentIndex + 1) % slides.length" 
             @keydown.arrow-left="currentIndex = (currentIndex - 1 + slides.length) % slides.length" 
             tabindex="0"
@@ -191,10 +226,10 @@
                     </div>
                 </template>
             </div>
-            <div class="absolute bottom-0 left-0 right-0 flex justify-center space-x-2">
+            <div class="absolute bottom-1 left-0 right-0 flex justify-center space-x-4">
                 <template x-for="(slide, index) in slides" :key="index">
                     <button 
-                        class="w-3 h-3 rounded-full focus:ring focus:outline-none"
+                        class="w-4 h-4 rounded-full focus:outline-none focus:ring focus:ring-white"
                         :class="{ 'bg-accent': index === currentIndex, 'bg-gray-600': index !== currentIndex }"
                         @click="currentIndex = index"
                         @keydown.enter="currentIndex = index"
@@ -216,6 +251,7 @@
                 x-ref="modal"
                 :class="{ 'hidden': !isOpenModal }"
                 x-cloak
+                @click="isOpenModal = false"
                 @keydown.escape="isOpenModal = false"
                 tabindex="0"
                 class="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center"
@@ -223,6 +259,8 @@
                 <div
                     class="w-full max-w-2xl max-h-screen overflow-auto mx-4 rounded-lg shadow-lg p-6 relative"
                     :class="{'bg-background text-text': darkMode, 'bg-text text-background': !darkMode}"
+                    @click.stop
+                    @keydown.escape="isOpenModal = false"
                 >
                     <button
                         @click="isOpenModal = false"
@@ -236,16 +274,21 @@
                     <div class="space-y-4">
                         <div class="space-y-8 mt-10">
                         <a href="https://www.linkedin.com/in/kevin-statua" target="_blank"
-                            class="block hover:underline text-lg font-medium">
-                            <div class="flex justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" class="mercado-match" width="24" height="24" focusable="false">
-                                    <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
-                                </svg>
-                                <span>LinkedIn Profile</span>
-                            </div>
+                            class="flex justify-center hover:underline text-lg font-medium">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" class="mr-1" width="24" height="24" focusable="false">
+                                <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                            </svg>
+                            <span class="leading-[25px]">LinkedIn Profile</span>
                         </a>
                         <hr/>
+                        <a class="flex lg:hidden justify-center hover:underline text-lg font-medium" href="https://forms.gle/2SV2QDBxJ8CsTWrg9">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="currentColor" class="mr-1" height="24px" width="24px" version="1.1" viewBox="0 0 210 210" xml:space="preserve">
+                                <path d="M0,105C0,47.103,47.103,0,105,0c23.383,0,45.515,7.523,64.004,21.756l-24.4,31.696C133.172,44.652,119.477,40,105,40  c-35.841,0-65,29.159-65,65s29.159,65,65,65c28.867,0,53.398-18.913,61.852-45H105V85h105v20c0,57.897-47.103,105-105,105  S0,162.897,0,105z"/>
+                            </svg>
+                            <span class="leading-[25px]">Contact Form</span>
+                        </a>
                         <iframe 
+                            class="hidden lg:block"
                             src="https://docs.google.com/forms/d/e/1FAIpQLSd2Y417eodc5nEigXHks9XpqvGYJrKC82H-Oys1Q2rCW3mzRA/viewform?embedded=true" 
                             width="100%" 
                             height="800" 

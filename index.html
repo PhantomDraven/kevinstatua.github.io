@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" x-data>
+<html lang="en" x-data="{ isOpenModal: false, darkMode: true }" @keydown.enter="isOpenModal = true">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kevin Statua - Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script async src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.2/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.2/dist/cdn.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -14,10 +14,9 @@
                         primary: '#07070a',
                         accent: '#950952ff',
                         background: '#07070a',
-                        text: '#f4f4f0',
-                        highlight: '#9a3900',
+                        text: '#f4f4f0'
                     },
-                },
+                }
             },
         };
     </script>
@@ -37,11 +36,50 @@
         }
     </script>
 </head>
-<body class="flex flex-col min-h-screen bg-background text-text">
-    <header class="bg-primary py-6 border-b">
-        <div class="container mx-auto px-6">
+<body
+    class="flex flex-col min-h-screen bg-background text-text"
+    :class="{'bg-background text-text': darkMode, 'bg-text text-background': !darkMode}"
+>
+    <header class="py-6 border-b">
+        <div class="container relative mx-auto px-6">
             <h1 class="text-4xl font-bold">Kevin Statua</h1>
             <p class="text-lg">Javascript Developer - <span class="font-bold">GoLang Junior - k8s lover</span> | Chief Operating Officer</p>
+            <div class="absolute top-0 right-0 mr-6">
+                <div 
+                    class="relative w-20 h-8 rounded-[50px] border cursor-pointer"
+                    :class="{ 'border-text': darkMode, 'border-background': !darkMode }"
+                    @click="darkMode = !darkMode"
+                >
+                    <div
+                        class="w-6 h-6 rounded-full absolute top-[3px] left-[3px] transition ease-in-out duration-500 overflow-hidden"
+                        :class="{ 'translate-x-[46px]': !darkMode }"
+                    >
+                        <span :class="{ 'hidden' : !darkMode }">
+                            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                  <radialGradient id="gradientSun" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                    <stop offset="0%" style="stop-color:yellow; stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:orange; stop-opacity:1" />
+                                  </radialGradient>
+                                </defs>
+                                <circle cx="12" cy="12" r="12" fill="url(#gradientSun)" />
+                            </svg>
+                        </span>
+                        <span :class="{ 'hidden' : darkMode }">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                  <radialGradient id="gradientMoon" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+                                    <stop offset="0%" style="stop-color:white; stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:gray; stop-opacity:1" />
+                                  </radialGradient>
+                                </defs>
+                                <circle cx="12" cy="12" r="12" fill="url(#gradientMoon)" />
+                                <circle cx="21" cy="12" r="12" fill="#f4f4f0" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -65,7 +103,7 @@
 
         <section class="mb-8">
             <h2 class="text-2xl font-bold mb-4">Experience</h2>
-            <div class="grid grid-cols-2">
+            <div class="grid lg:grid-cols-2 gap-4">
                 <div>
                     <h3 class="text-xl font-semibold pb-1">Tidycode</h3>
                     <p class="italic">Chief Operating Officer (Jan 2022 - Present)</p>
@@ -155,7 +193,7 @@
                 <template x-for="(slide, index) in slides" :key="index">
                     <button 
                         class="w-3 h-3 rounded-full focus:ring focus:outline-none"
-                        :class="{ 'bg-blue-600': index === currentIndex, 'bg-gray-400': index !== currentIndex }"
+                        :class="{ 'bg-accent': index === currentIndex, 'bg-gray-600': index !== currentIndex }"
                         @click="currentIndex = index"
                         @keydown.enter="currentIndex = index"
                         :aria-label="'Go to slide ' + (index + 1)"
@@ -164,22 +202,31 @@
             </div>
         </div>
 
-        <section class="pt-8 mb-8 text-center">
+        <section class="pt-8 mb-8 text-center" @keydown.enter="isOpenModal = true">
             <button 
-                @click="$refs.modal.classList.remove('hidden')" 
-                class="bg-accent py-2 px-6 rounded hover:bg-text hover:text-black"
+                @click="isOpenModal = true, document.getElementById('modal').focus()"
+                class="bg-accent text-white py-2 px-6 rounded hover:bg-text hover:text-black"
             >
                 Contact Me
             </button>
-
             <div 
-                x-ref="modal" 
-                class="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center hidden"
+                id="modal"    
+                x-ref="modal"
+                :class="{ 'hidden': !isOpenModal }"
+                x-cloak
+                @keydown.escape="isOpenModal = false"
+                tabindex="0"
+                class="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center"
             >
-                <div class="bg-background text-text w-full max-w-2xl max-h-screen overflow-auto mx-4 rounded-lg shadow-lg p-6 relative">
-                    <button 
-                        @click="$refs.modal.classList.add('hidden')" 
+                <div
+                    class="w-full max-w-2xl max-h-screen overflow-auto mx-4 rounded-lg shadow-lg p-6 relative"
+                    :class="{'bg-background text-text': darkMode, 'bg-text text-background': !darkMode}"
+                >
+                    <button
+                        @click="isOpenModal = false"
+                        @keydown.enter="isOpenModal = false"
                         class="absolute top-3 right-3 px-4 py-3 hover:border border-text"
+                        aria-label="Close Modal"
                     >
                         &times;
                     </button>
@@ -209,7 +256,7 @@
         </section>
     </main>
 
-    <footer class="bg-primary py-4 mt-auto border-t">
+    <footer class="py-4 mt-auto border-t">
         <div class="container mx-auto px-6 text-center">
             <p>&copy; <span x-text="'1994-' + new Date().getFullYear()"></span> Kevin Statua. All Rights Reserved.</p>
         </div>

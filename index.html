@@ -1,30 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Kevin Statua | Home Page</title>
-        <meta name="description" content="Professional web developer with experience in frontend, backend, system administratioin and data analyst.">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="og:title" content="Kevin Statua | Homepage">
-        <meta property="og:site_name" content="Kevin Statua">
-        <meta property="og:image" content="null">
-        <meta property="og:description" content="Professional web developer with experience in frontend, backend, system administratioin and data analyst.">  
-        <meta property="og:url" content="https://kevinstatua.com">
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" />
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125710007-1"></script>
-        <script>
-            {
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin Statua - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#07070a',
+                        accent: '#950952ff',
+                        background: '#07070a',
+                        text: '#f4f4f0',
+                        highlight: '#9a3900',
+                    },
+                },
+            },
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-125710007-1"></script>
+    <script>
+        {
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
-                gtag('config', 'UA-125710007-1');   
-            } // Isn't it more fancy write in a statement block?
-        </script>
-    </head>
-    <body>
-        <h1>Work in progress</h1>
-    </body>
+            gtag('config', 'UA-125710007-1');
+        }
+    </script>
+</head>
+<body class="flex flex-col min-h-screen bg-background text-text">
+    <header class="bg-primary py-6 border-b">
+        <div class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold">Kevin Statua</h1>
+            <p class="text-lg">Javascript Developer - <span class="font-bold">GoLang Junior - k8s lover</span> | Chief Operating Officer</p>
+            
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-10">
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Summary</h2>
+            <p>
+                Technology professional with nearly a decade of experience, specializing in scalable e-commerce solutions using Adobe Commerce, Vue, React, and more. Experienced in leadership roles, overseeing project delivery and fostering innovation.
+            </p>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Top Skills</h2>
+            <ul class="list-disc pl-6">
+                <li>JavaScript</li>
+                <li>React</li>
+                <li>Vite</li>
+                <li>Nodejs</li>
+            </ul>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4">Experience</h2>
+            <div class="grid grid-cols-2">
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Tidycode</h3>
+                    <p class="italic">Chief Operating Officer (Jan 2022 - Present)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Oversee operations, strategic planning, and client relationship management.</li>
+                        <li>Streamlined workflows to improve efficiency and profitability.</li>
+                        <li>Frontend & Devops</li>
+                    </ul>
+                    <p class="italic">CTO (Mar 2021 - Dec 2021)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Led a team to deliver advanced technology solutions.</li>
+                        <li>Managed the implementation of over six Magento 2 projects.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Bitbull</h3>
+                    <p class="italic">Frontend Developer / R&D (Jul 2020 - Feb 2021)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Worked in a collaborative, skilled team environment, pioneering the use of Hyvä Theme for Magento 2 projects.</li>
+                        <li>Contributed to innovative frontend solutions, enhancing performance and user experience.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Alpenite</h3>
+                    <p class="italic">Frontend Architect (Nov 2016 - Jul 2020)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Acted as a full-stack developer and technical leader on projects involving Magento, Salesforce Commerce Cloud, and Shopify.</li>
+                        <li>Served as the company’s reference for Magento 2 frontend projects, delivering scalable and performant solutions.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Vaimo</h3>
+                    <p class="italic">Frontend Developer (May 2019 - Sep 2019)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Led frontend development for Magento 1 and Magento 2 projects.</li>
+                        <li>Delivered a large-scale e-commerce solution handling flight data, enabling users to purchase products and receive them before departure.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Glorioso Piave Srl</h3>
+                    <p class="italic">Web Marketing Intern (May 2016 - Nov 2016)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Managed and developed the company's website, ensuring functionality and updates.</li>
+                        <li>Oversaw Airbnb and Booking operations, optimizing online presence.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold pb-1">Webtechnet Srl</h3>
+                    <p class="italic">Web Developer Intern (Dec 2015 - Nov 2016)</p>
+                    <ul class="list-disc pl-6 pb-2">
+                        <li>Developed and designed websites, focusing on performance and user experience.</li>
+                        <li>Migrated clients' hosting solutions, ensuring seamless transitions and uptime.</li>
+                        <li>Acted as a webmaster for internal CRMs used by Allianz and Generali Italy, ensuring stability and usability.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-center">What I Do in My Free Time</h2>
+            <div class="relative overflow-hidden w-full group">
+                <div id="slider" class="flex transition-transform duration-500 pb-10">
+                    <div class="w-full flex-shrink-0">
+                        <h3 class="text-xl font-semibold">Gaming</h3>
+                        <p>
+                            My journey to becoming ranked 3rd in Europe for Call of Duty during high school was a valuable learning experience. I approached gaming from a strategic perspective, studying movement mechanics, optimizing decision-making processes, and dedicating extensive time to deliberate practice. This experience taught me discipline, adaptability, and the importance of analyzing systems to gain a competitive edge—skills I apply in my professional life as well.
+                        </p>
+                    </div>
+                    <div class="w-full flex-shrink-0">
+                        <h3 class="text-xl font-semibold">Painting</h3>
+                        <p>
+                            Painting miniatures has helped me develop attention to detail and patience. The precision required in this creative hobby parallels my work in coding, where careful planning and execution are essential to achieving the desired outcome.
+                        </p>
+                    </div>
+                    <div class="w-full flex-shrink-0">
+                        <h3 class="text-xl font-semibold">Fitness and Motorbiking</h3>
+                        <p>
+                            Staying active through fitness and motorbiking is not just a pastime; it's a practice in setting and achieving goals. My gym routine, combined with my plans to include swimming and running, emphasizes perseverance and constant improvement. Motorbiking provides a different perspective on problem-solving, as it requires focus, quick reactions, and route planning—all invaluable a professional setting.
+                        </p>
+                    </div>
+                    <div class="w-full flex-shrink-0">
+                        <h3 class="text-xl font-semibold">Dungeon Master</h3>
+                        <p>
+                            As a Dungeon Master for Dungeons & Dragons and other tabletop RPGs, I have honed storytelling, creative thinking, and leadership skills. Managing a game involves understanding group dynamics, maintaining engagement, and adapting to unexpected situations—abilities that are highly transferable to team management and project coordination.
+                        </p>
+                    </div>
+                </div>
+        
+                <div id="dots" class="absolute bottom-0 left-0 right-0 flex justify-center space-x-2">
+                    <!-- Dots will be dynamically generated here -->
+                </div>
+            </div>
+            <script async type="application/javascript" src="/slider.js"></script>
+        </section>
+
+        <section class="pt-8 mb-8 text-center">
+            <!-- Contact Button -->
+            <button id="contactButton" class="bg-accent py-2 px-6 rounded hover:bg-blue-700">
+                Contact Me
+            </button>
+        
+            <!-- Modal -->
+            <div id="contactModal" class="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center hidden">
+                <div class="bg-background text-text w-full max-w-full md:max-w-2xl mx-4 rounded-lg shadow-lg p-6 relative shadow-xl">
+                    <!-- Close Button -->
+                    <button id="closeModal" tabindex="0" class="absolute top-3 right-3 px-4 py-3 hover:border border-text">
+                        &times;
+                    </button>
+        
+                    <!-- Modal Content -->
+                    <h2 class="text-xl font-bold mb-4">Contact Me</h2>
+                    <div class="space-y-8 mt-10">
+                        <!-- LinkedIn Link -->
+                        <a href="https://www.linkedin.com/in/kevin-statua" target="_blank"
+                            class="block text-accent hover:underline text-lg font-medium">
+                            <div class="flex justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" class="mercado-match" width="24" height="24" focusable="false">
+                                    <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                                </svg>
+                                <span>LinkedIn Profile</span>
+                            </div>
+                        </a>
+        
+                        <!-- Google Form -->
+                        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSd2Y417eodc5nEigXHks9XpqvGYJrKC82H-Oys1Q2rCW3mzRA/viewform?embedded=true"
+                            width="100%" height="800" frameborder="0" marginheight="0" marginwidth="0">
+                            Loading…
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+            <script async type="application/javascript" src="/contact.js"></script>
+        </section>       
+    </main>
+
+    <footer class="bg-primary py-4 mt-auto border-t">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; <span id="year"></span> Kevin Statua. All Rights Reserved.</p>
+            <script>
+                document.getElementById('year').innerText = `1994-${new Date().getFullYear()}`;
+            </script>
+        </div>
+    </footer>
+</body>
+
 </html>

@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PhantomBrowser // 2077</title>
+    <meta name="description" content="Landing page in stile cyberpunk: neon, glitch, parallax e UI olografiche." />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-0: #060914;
+            --bg-1: #0b1024;
+            --bg-2: #101735;
+            --grid: rgba(0, 234, 255, 0.08);
+            --neon-cyan: #00eaff;
+            --neon-magenta: #ff00e5;
+            --neon-yellow: #f7ff00;
+            --neon-green: #00ff9c;
+            --text: #d7e0ff;
+            --muted: #9aa6d1;
+            --card: rgba(16, 23, 53, 0.55);
+            --card-border: rgba(0, 234, 255, 0.25);
+            --glass: rgba(255, 255, 255, 0.04);
+            --ring: rgba(255, 0, 229, 0.35);
+            --shadow: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Rajdhani", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+            background: radial-gradient(1200px 800px at 80% 10%, #1b0b2a 0%, var(--bg-1) 30%, var(--bg-0) 100%),
+                linear-gradient(120deg, #071022, #0b1024 50%, #0a0f22 100%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        /* --- Ambient neon haze --- */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -10vmax;
+            background: radial-gradient(50vmax 30vmax at 10% 10%, rgba(255, 0, 229, .08), transparent 60%),
+                radial-gradient(40vmax 25vmax at 90% 20%, rgba(0, 234, 255, .08), transparent 70%),
+                radial-gradient(45vmax 35vmax at 70% 90%, rgba(0, 255, 156, .08), transparent 70%);
+            filter: blur(40px);
+            pointer-events: none;
+            z-index: 0;
+            animation: drift 28s linear infinite alternate;
+        }
+
+        @keyframes drift {
+            from {
+                transform: translate3d(-2%, -2%, 0) scale(1.02);
+            }
+
+            to {
+                transform: translate3d(2%, 2%, 0) scale(1.05);
+            }
+        }
+
+        /* --- CRT scanlines --- */
+        .scanlines::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            background: repeating-linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0.03) 0px,
+                    rgba(255, 255, 255, 0.03) 1px,
+                    transparent 2px,
+                    transparent 4px);
+            mix-blend-mode: overlay;
+            opacity: .35;
+            animation: flicker 1.8s infinite steps(2, end);
+        }
+
+        @keyframes flicker {
+            50% {
+                opacity: .28;
+            }
+        }
+
+        /* --- Grid overlay --- */
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: .5;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px, 40px 40px;
+            mask-image: radial-gradient(80% 60% at 50% 40%, black 55%, transparent 100%);
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            background: linear-gradient(to right, rgba(0, 234, 255, .06), rgba(255, 0, 229, .06));
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 30% 30%, var(--neon-cyan), transparent 55%),
+                radial-gradient(circle at 70% 70%, var(--neon-magenta), transparent 55%),
+                linear-gradient(135deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, 0));
+            box-shadow: 0 0 16px rgba(0, 234, 255, .6), 0 0 26px rgba(255, 0, 229, .4) inset;
+        }
+
+        .brand-title {
+            font-family: "Orbitron", sans-serif;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            text-shadow: 0 0 6px rgba(0, 234, 255, .65), 0 0 12px rgba(255, 0, 229, .35);
+        }
+
+        .nav a {
+            color: var(--muted);
+            text-decoration: none;
+            margin-left: 18px;
+            font-weight: 600;
+        }
+
+        .nav a:hover {
+            color: var(--text);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        main {
+            min-hegith: 80vh;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 40px;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 28px;
+            align-items: center;
+        }
+
+        @media (max-width: 980px) {
+            .hero {
+                grid-template-columns: 1fr;
+                padding-top: 56px;
+            }
+        }
+
+        .title {
+            font-family: "Orbitron", sans-serif;
+            font-size: clamp(34px, 6vw, 76px);
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            margin: 0 0 16px;
+            filter: drop-shadow(0 4px 16px rgba(0, 234, 255, .35));
+        }
+
+        .title .stroke {
+            color: transparent;
+            -webkit-text-stroke: 1px var(--neon-cyan);
+            text-shadow: none;
+        }
+
+        .glitch {
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 16px var(--neon-magenta), 0 0 22px var(--neon-cyan);
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .glitch::before {
+            left: 1.5px;
+            text-shadow: -1px 0 var(--neon-cyan);
+            clip-path: polygon(0 2%, 100% 2%, 100% 44%, 0 44%);
+            animation: glitchTop 3.8s infinite linear;
+        }
+
+        .glitch::after {
+            left: -1.5px;
+            text-shadow: 1px 0 var(--neon-magenta);
+            clip-path: polygon(0 56%, 100% 56%, 100% 98%, 0 98%);
+            animation: glitchBot 2.9s infinite linear;
+        }
+
+        @keyframes glitchTop {
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(-2px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes glitchBot {
+            0% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(2px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: clamp(16px, 2.4vw, 20px);
+            margin: 0 0 28px;
+            max-width: 64ch;
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 18px;
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            background: linear-gradient(to bottom, rgba(0, 234, 255, .12), rgba(255, 0, 229, .10));
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: .04em;
+            box-shadow: 0 8px 28px rgba(0, 234, 255, .15), inset 0 0 18px rgba(0, 234, 255, .06);
+            transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 36px rgba(255, 0, 229, .25), 0 0 18px var(--neon-cyan) inset;
+            filter: saturate(1.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            border-color: rgba(0, 255, 156, .6);
+            box-shadow: 0 0 24px rgba(0, 255, 156, .25), inset 0 0 24px rgba(0, 255, 156, .08);
+        }
+
+        .btn-outline {
+            background: transparent;
+        }
+
+        .hud {
+            position: relative;
+            border: 1px solid var(--card-border);
+            background: var(--card);
+            border-radius: 18px;
+            padding: 18px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, .5), inset 0 0 24px rgba(0, 234, 255, .06);
+        }
+
+        .hud .hud-grid {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .02) 0 1px, transparent 1px 3px);
+            opacity: .6;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        .hud .rings {
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            right: -120px;
+            top: -120px;
+            pointer-events: none;
+            opacity: .5;
+            background: radial-gradient(closest-side, transparent 55%, var(--ring) 56% 57%, transparent 58%),
+                radial-gradient(closest-side, transparent 70%, rgba(0, 234, 255, .35) 71% 72%, transparent 73%),
+                radial-gradient(closest-side, transparent 85%, rgba(0, 255, 156, .3) 86% 87%, transparent 88%);
+            filter: blur(.5px);
+            transform: translateZ(0);
+        }
+
+        .features {
+            max-width: 1200px;
+            margin: 24px auto 80px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (max-width: 1000px) {
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            position: relative;
+            border: 1px solid var(--card-border);
+            background: var(--glass);
+            border-radius: 16px;
+            padding: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, .6);
+        }
+
+        .card h3 {
+            margin: 6px 0 8px;
+            font-family: "Orbitron", sans-serif;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            color: var(--muted);
+            margin: 0 0 10px;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 6px 10px;
+            border: 1px solid var(--card-border);
+            border-radius: 999px;
+            font-size: 12px;
+            letter-spacing: .08em;
+            opacity: .9;
+        }
+
+        /* Decorative corner lines */
+        .card::before,
+        .card::after {
+            content: "";
+            position: absolute;
+            width: 42px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan));
+        }
+
+        .card::before {
+            top: 10px;
+            left: 10px;
+            box-shadow: 0 0 12px var(--neon-cyan);
+        }
+
+        .card::after {
+            bottom: 10px;
+            right: 10px;
+            background: linear-gradient(90deg, var(--neon-magenta), transparent);
+            box-shadow: 0 0 12px var(--neon-magenta);
+        }
+
+        .divider {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            opacity: .7;
+            border-top: 1px dashed rgba(0, 234, 255, .2);
+            filter: drop-shadow(0 0 10px rgba(0, 234, 255, .3));
+        }
+
+        .footer {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer small {
+            opacity: .9;
+        }
+
+        /* Cursor pulse */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 90;
+            box-shadow: 0 0 18px var(--neon-cyan), 0 0 30px var(--neon-magenta);
+            transform: translate(-50%, -50%);
+            mix-blend-mode: screen;
+        }
+
+        /* Accessibility: reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+    <style>
+        /* ====== MODALI ====== */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center;
+            z-index: 200;
+            background: rgba(2, 4, 8, 0.65);
+            backdrop-filter: blur(6px) saturate(140%);
+        }
+
+        .modal-backdrop[open] {
+            display: grid;
+        }
+
+        .modal {
+            width: min(840px, 96vw);
+            max-height: 85vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            border-radius: 16px;
+            border: 1px solid #223;
+            background: linear-gradient(180deg, rgba(13, 16, 21, 0.8), rgba(13, 16, 21, 0.95));
+            box-shadow: 0 0 0 1px rgba(21, 243, 255, 0.25),
+                0 0 24px rgba(21, 243, 255, 0.18),
+                0 10px 30px rgba(0, 0, 0, 0.45);
+            position: relative;
+        }
+
+        .modal::before {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: 16px;
+            pointer-events: none;
+            background: linear-gradient(135deg, rgba(21, 243, 255, 0.25), rgba(255, 43, 214, 0.25));
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            padding: 1px;
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0.7;
+        }
+
+        .modal-head {
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #1d2030;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, rgba(13, 16, 22, 0.98), rgba(13, 16, 22, 0.88));
+        }
+
+        .modal-title {
+            margin: 0;
+            font: 800 18px/1 "Rajdhani", sans-serif;
+        }
+
+        .chip {
+            font: 800 11px/1 "Orbitron", sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--neon);
+        }
+
+        .modal-body {
+            padding: 18px;
+            color: #dbe6f4;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .modal-foot {
+            padding: 14px 18px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #1d2030;
+        }
+
+        .iconbtn {
+            width: 36px;
+            height: 36px;
+            display: inline-grid;
+            place-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #233;
+            color: white;
+            background: linear-gradient(180deg, rgba(21, 243, 255, 0.12), rgba(21, 243, 255, 0.04));
+        }
+
+        .iconbtn:hover {
+            box-shadow: 0 0 12px rgba(21, 243, 255, 0.15);
+        }
+    </style>
+</head>
+
+<body class="scanlines">
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <header>
+        <nav class="nav" aria-label="Navigazione principale">
+            <div class="brand">
+                <div class="logo" aria-hidden="true"></div>
+                <div class="brand-title">PhantomBrowser </div>
+            </div>
+            <!--
+            <div class="links">
+                <a href="#contact">Contatti</a>
+            </div>
+            -->
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <h1 class="title">
+                    <span class="stroke">Benvenuto a</span><br />
+                    <span class="glitch" data-text="Night City">Night City</span>
+                </h1>
+                <p class="subtitle">La vostra <strong><span class="glitch" data-text="City">City</span></strong> sempre
+                    a disposizione.</p>
+                <div class="cta-row">
+                    <a class="btn btn-primary module-autoice-start">🔧 Avvia modulo Auto-ICE</a>
+                </div>
+            </div>
+            <aside class="hud" aria-label="Pannello di telemetria">
+                <div class="hud-grid"></div>
+                <div class="rings"></div>
+                <div style="position:relative; z-index:2;">
+                    <h2
+                        style="margin:0 0 8px; font-family: 'Orbitron', sans-serif; letter-spacing:.08em; text-transform:uppercase;">
+                        Telemetria // 2.077</h2>
+                    <div class="chip" aria-label="Stato sistema">ONLINE</div>
+                    <p style="margin:12px 0 0; color:var(--muted)">Ping: <span id="ping"></span>ms · Throughput: <span
+                            id="bandwidth"></span>Gb/s · Integrità: <span id="itegrity"></span>%
+                    </p>
+                    <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                        <div class="card" style="padding:12px;">
+                            <h3 style="margin:0 0 6px;">Energia</h3>
+                            <p style="margin:0">Reattore: <strong><span id="reactor"></span>%</strong></p>
+                        </div>
+                        <div class="card" style="padding:12px;">
+                            <h3 style="margin:0 0 6px;">Rete</h3>
+                            <p style="margin:0">Nodi: <strong id="nodeNumber"></strong> · Sicurezza:
+                                <strong>ALTA</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <div class="divider"></div>
+
+        <section id="features" class="features" aria-label="Moduli disponibili">
+            <article class="card">
+                <span class="chip">#01</span>
+                <h3>Jobs</h3>
+                <p>Cartellone missioni.</p>
+                <button class="btn outline" data-modal-target="mod-jobs" aria-haspopup="dialog"
+                    aria-controls="mod-jobs">Apri</button>
+            </article>
+            <article class="card">
+                <span class="chip">#02</span>
+                <h3>Upgrades</h3>
+                <p>Sezione potenziamenti: schede con ologrammi e progressi. Perfetta per servizi, skill o feature list.
+                </p>
+                <button class="btn pink outline" data-modal-target="mod-upgrades" aria-haspopup="dialog"
+                    aria-controls="mod-upgrades">Apri</button>
+            </article>
+            <article class="card">
+                <span class="chip">#03</span>
+                <h3>Fixers</h3>
+                <p>Directory dei contatti con badge reputazione e stato.</p>
+                <button class="btn gold outline" data-modal-target="mod-fixers" aria-haspopup="dialog"
+                    aria-controls="mod-fixers">Apri</button>
+            </article>
+        </section>
+    </main>
+
+    <!-- Jobs -->
+    <div class="modal-backdrop" id="mod-jobs" role="dialog" aria-modal="true" aria-labelledby="jobs-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip">PhantomBrowser</span>
+                <h2 class="modal-title" id="jobs-title">Jobs</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <div class="card" style="padding:12px;">
+                    <h4 style="margin:0 0 6px;">Chi troppo tenta...</h4>
+                    <p>
+                        <strong>Fixer:</strong> Dave Kresnik<br>
+                        <strong>Incarico:</strong>Recupera Jenny Halvorsen, non fare domande.<br>
+                        <strong>Location:</strong>Maggiori info dal suo amico Loren Borgator al Red Dirt<br> 
+                    </p>
+                    <h4>Jenny Halvorsen</h4>
+                    <img src="./media/NPC/Jenny_Halvorsen.png" alt="Jenny Halvorsen"
+                        style="width:100%; border-radius:8px; margin-bottom:12px;">
+                    <h4>Loren Borgator</h4>
+                    <img src="./media/NPC/Loren_Borgator.png" alt="Loren Borgator"
+                        style="width:100%; border-radius:8px; margin-bottom:12px;">
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn outline" data-close>Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrades -->
+    <div class="modal-backdrop" id="mod-upgrades" role="dialog" aria-modal="true" aria-labelledby="up-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip" style="color:var(--neon2)">PhantomBrowser</span>
+                <h2 class="modal-title" id="up-title">Upgrades</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <span class="glitch" data-text="Non disponibili">Non disponibili</span>
+            </div>
+            <div class="modal-foot">
+                <button class="btn outline" data-close>Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixers -->
+    <div class="modal-backdrop" id="mod-fixers" role="dialog" aria-modal="true" aria-labelledby="fx-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip" style="color:var(--warn)">PhantomBrowser</span>
+                <h2 class="modal-title" id="fx-title">Fixers</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <div class="card" style="padding:12px;">
+                    <h4 style="margin:0 0 6px;">Dave Kresnik</h4>
+                    <img src="./media/Fixer/Dave_Kresnik2.png" alt="Dave Kresnik"
+                        style="width:100%; border-radius:8px; margin-bottom:12px;">
+                    <ul>
+                        <li>Dove trovarlo: <a data-modal-target="mod-locations" aria-haspopup="dialog"
+                                aria-controls="mod-fixers" style="color: yellow; cursor: pointer;">Red Dirt</a></li>
+                        <li>Quando trovarlo: 09-18</li>
+                        <li>Reputazione: <span class="chip" style="color:var(--neon2)">Bassa</span></li>
+                        <li>Stato: <span class="chip" style="color:var(--warn)">Attivo</span></li>
+                    </ul>
+                </div>
+                <div class="card" style="padding:12px;">
+                    <h4 style="margin:0 0 6px;">Dakota Smith</h4>
+                    <img src="./media/Fixer/Dakota_Smith.jpg" alt="Dakota Smith"
+                        style="width:100%; border-radius:8px; margin-bottom:12px;">
+                    <ul>
+                        <li>Dove trovarlo: ?</li>
+                        <li>Quando trovarlo: ?</li>
+                        <li>Reputazione: <span class="chip" style="color:var(--neon2)">Alta</span></li>
+                        <li>Stato: <span class="chip" style="color:var(--warn)">Attivo</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn outline" data-close>Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Locations -->
+    <div class="modal-backdrop" id="mod-locations" role="dialog" aria-modal="true" aria-labelledby="up-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip" style="color:var(--neon2)">PhantomBrowser</span>
+                <h2 class="modal-title" id="up-title">Locations</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <div class="card" style="padding:12px;">
+                    <h4 style="margin:0 0 6px;">Red Dirt</h4>
+                    <img src="./media/Locations/RedDirt/photomode_11082025_140405.png" alt="Red Dirt"
+                        style="width:100%; border-radius:8px; margin-bottom:12px;">
+                    <a data-modal-target="mod-red-dirt" aria-haspopup="dialog" aria-controls="mod-red-dirt"
+                        class="btn btn-primary">Scopri di più</a>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn outline" data-close>Chiudi</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bar Red Dirt -->
+    <div class="modal-backdrop" id="mod-red-dirt" role="dialog" aria-modal="true" aria-labelledby="up-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip" style="color:var(--neon2)">PhantomBrowser</span>
+                <h2 class="modal-title" id="up-title">Red Dirt</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <img src="./media/Locations/RedDirt/photomode_11082025_140435.png" alt="Red Dirt"
+                    style="width:100%; border-radius:8px; margin-bottom:12px;">
+                <img src="./media/Locations/RedDirt/photomode_11082025_140442.png" alt="Red Dirt"
+                    style="width:100%; border-radius:8px; margin-bottom:12px;">
+                <img src="./media/Locations/RedDirt/photomode_11082025_140458.png" alt="Red Dirt"
+                    style="width:100%; border-radius:8px; margin-bottom:12px;">
+                <img src="./media/Locations/RedDirt/photomode_11082025_140515.png" alt="Red Dirt"
+                    style="width:100%; border-radius:8px; margin-bottom:12px;">
+                <img src="./media/Locations/RedDirt/photomode_11082025_140630.png" alt="Red Dirt"
+                    style="width:100%; border-radius:8px; margin-bottom:12px;">
+            </div>
+        </div>
+        <div class="modal-foot">
+            <button class="btn outline" data-close>Chiudi</button>
+        </div>
+    </div>
+    </div>
+
+
+    <!-- message -->
+    <div class="modal-backdrop" id="mod-message" role="dialog" aria-modal="true" aria-labelledby="msg-title"
+        aria-hidden="true">
+        <div class="modal" role="document">
+            <div class="modal-head">
+                <span class="chip" style="color:var(--neon2)">PhantomBrowser</span>
+                <h2 class="modal-title" id="up-title">Messages</h2>
+                <div class="spacer"></div>
+                <button class="iconbtn" data-close aria-label="Chiudi (Esc)">…</button>
+            </div>
+            <div class="modal-body">
+                <span class="glitch" data-text="Nessun messaggio">Nessun messaggio</span>
+            </div>
+            <div class="modal-foot">
+                <button class="btn outline" data-close>Chiudi</button>
+            </div>
+        </div>
+    </div>
+    <style>
+        /* ===== Phone message style (scoped su #mod-message) ===== */
+        #mod-message .modal {
+            width: min(800px, 96vw);
+        }
+
+        #mod-message .modal-head {
+            border-bottom: none;
+            padding-bottom: 8px;
+        }
+
+        #mod-message .modal-body {
+            padding: 0 18px 16px;
+            background:
+                linear-gradient(180deg, rgba(255, 0, 229, .06), transparent 35%),
+                radial-gradient(900px 300px at 10% -10%, rgba(0, 234, 255, .10), transparent 60%);
+            grid-template-columns: auto;
+        }
+
+        /* cornice “schermo telefono” */
+        #mod-message .phone-card {
+            border: 1px solid rgba(255, 220, 0, .35);
+            border-radius: 14px;
+            background: linear-gradient(180deg, rgba(10, 12, 18, .95), rgba(10, 12, 18, .85));
+            box-shadow: inset 0 0 0 1px rgba(255, 220, 0, .12), 0 12px 30px rgba(0, 0, 0, .45);
+            padding: 14px;
+            position: relative;
+        }
+
+        /* testata contatto */
+        #mod-message .msg-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed rgba(255, 220, 0, .25);
+        }
+
+        #mod-message .avatar {
+            width: 124px;
+            height: 164px;
+            border-radius: 8px;
+            flex: 0 0 auto;
+            background: radial-gradient(circle at 30% 30%, #00eaff 0 40%, transparent 60%),
+                radial-gradient(circle at 70% 70%, #ff00e5 0 40%, transparent 60%);
+            box-shadow: 0 0 10px rgba(0, 234, 255, .5), inset 0 0 12px rgba(255, 0, 229, .25);
+        }
+
+        #mod-message .sender {
+            font: 800 14px/1 "Orbitron", sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #mod-message .stamp {
+            margin-left: auto;
+            color: #9aa6d1;
+            font: 700 11px/1 "Rajdhani", sans-serif;
+        }
+
+        /* bubble del messaggio */
+        #mod-message .msg-bubble {
+            position: relative;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 220, 0, .35);
+            background: linear-gradient(180deg, rgba(20, 22, 30, .95), rgba(20, 22, 30, .85));
+        }
+
+        #mod-message .msg-bubble::before {
+            content: "";
+            position: absolute;
+            left: 12px;
+            top: -7px;
+            width: 12px;
+            height: 12px;
+            transform: rotate(45deg);
+            background: linear-gradient(180deg, rgba(20, 22, 30, .95), rgba(20, 22, 30, .85));
+            border-left: 1px solid rgba(255, 220, 0, .35);
+            border-top: 1px solid rgba(255, 220, 0, .35);
+        }
+
+        /* testo giallo stile CP */
+        #mod-message .msg-text {
+            color: #ffea00;
+            font: 700 16px/1.35 "Rajdhani", sans-serif;
+            letter-spacing: .2px;
+            text-shadow: 0 0 6px rgba(255, 234, 0, .25);
+            white-space: pre-line;
+            /* rispetta \n */
+        }
+
+        /* immagine nella bubble */
+        #mod-message .msg-photo {
+            width: 124px;
+            height: 164px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 220, 0, .35);
+            box-shadow: 0 0 10px rgba(255, 220, 0, .18);
+            margin: 8px 0 0 0;
+            display: block;
+        }
+
+        /* Thread messaggi */
+        #mod-message .thread {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 420px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        /* Messaggi outgoing/incoming */
+        #mod-message .msg-bubble.outgoing {
+            background: linear-gradient(180deg, rgba(255, 234, 0, .15), rgba(255, 234, 0, .08));
+            border-color: rgba(255, 234, 0, .6);
+            align-self: flex-end;
+            margin-left: 100px;
+        }
+
+        #mod-message .msg-bubble.outgoing::before {
+            left: auto;
+            right: 12px;
+            transform: rotate(-45deg);
+            border-left: none;
+            border-top: 1px solid rgba(255, 234, 0, .6);
+            border-right: 1px solid rgba(255, 234, 0, .6);
+        }
+
+        #mod-message .msg-bubble.incoming {
+            background: linear-gradient(180deg, rgba(20, 22, 30, .95), rgba(20, 22, 30, .85));
+            border-color: rgba(255, 220, 0, .35);
+            align-self: flex-start;
+            margin-right: 100px;
+        }
+
+        #mod-message .msg-bubble.incoming::before {
+            left: 12px;
+            right: auto;
+            transform: rotate(45deg);
+            border-left: 1px solid rgba(255, 220, 0, .35);
+            border-top: 1px solid rgba(255, 220, 0, .35);
+        }
+    </style>
+    <script>
+        // Inizializza conversazione
+        function initPhoneConversation(sender, image) {
+            const modal = document.getElementById('mod-message');
+            if (!modal) return;
+            
+            let photoUrl = image;
+            if (photoUrl) {
+                photoUrl = photoUrl.startsWith('http') ? photoUrl : `./media/${photoUrl}`;
+            }
+
+            const bodyEl = modal.querySelector('.modal-body');
+            bodyEl.innerHTML = `
+    <div class="phone-card">
+      <div class="msg-header">
+        <div class="avatar">${photoUrl ? `<img class="msg-photo" src="${photoUrl}" alt="">` : ''}</div>
+        <div class="sender">${sender}</div>
+        <div class="stamp">${new Date().toLocaleString()}</div>
+      </div>
+      <div class="thread"></div>
+    </div>
+  `;
+
+
+            if (typeof openModal === 'function') {
+                openModal('mod-message');
+            } else {
+                modal.setAttribute('open', ''); modal.removeAttribute('aria-hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Aggiunge messaggio al thread
+        function appendPhoneMessage(type, body, opts = {}) {
+            const thread = document.querySelector('#mod-message .thread');
+            if (!thread) return;
+            const ts = opts.timestamp ? new Date(opts.timestamp) : new Date();
+            let photoUrl = opts.photoUrl;
+            if (photoUrl) {
+                photoUrl = photoUrl.startsWith('http') ? photoUrl : `./media/${photoUrl}`;
+            }
+
+            const esc = s => String(s).replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+            const msgHTML = `
+    <div class="msg-bubble ${type}">
+      <div class="msg-text">${esc(body)}</div>
+      ${photoUrl ? `<img class="msg-photo" src="${photoUrl}" alt="">` : ''}
+      <div class="stamp" style="margin-top:4px;font-size:11px;color:#888">
+        ${ts.toLocaleTimeString()}
+      </div>
+    </div>
+  `;
+            thread.insertAdjacentHTML('beforeend', msgHTML);
+            thread.scrollTop = thread.scrollHeight;
+        }
+
+        // Funzioni comode
+        function sendPhoneReply(body, opts) {
+            appendPhoneMessage('outgoing', body, opts);
+        }
+        function receivePhoneMessage(body, opts) {
+            appendPhoneMessage('incoming', body, opts);
+        }
+    </script>
+
+    <footer class="footer" id="contact">
+        <small>© 2077 PhantomBrowser // Build v1.0</small>
+    </footer>
+
+    <div class="cursor" aria-hidden="true"></div>
+
+    <!-- HUD -->
+    <script>
+        function writeRandomNumber(element, intervalMs, range, withDecimals = false, onlyOnce = false) {
+            if (!(element instanceof HTMLElement)) {
+                console.error("The parameter must be a valid HTML element");
+                return;
+            }
+
+            function updateNumber() {
+                let number;
+                if (withDecimals) {
+                    number = (Math.random() * range).toFixed(2);
+                } else {
+                    number = Math.floor(Math.random() * range);
+                }
+                element.textContent = number;
+            }
+
+            // Update immediately
+            updateNumber();
+
+            if (onlyOnce) {
+                return; // If onlyOnce is true, stop here
+            }
+
+            // Update every X milliseconds
+            return setInterval(updateNumber, intervalMs);
+        }
+
+        writeRandomNumber(document.getElementById('ping'), 1000, 10, false, false);
+        writeRandomNumber(document.getElementById('bandwidth'), 2000, 100, true, false);
+        writeRandomNumber(document.getElementById('itegrity'), 1, 100, true, true);
+        writeRandomNumber(document.getElementById('reactor'), 1, 100, false, true);
+        writeRandomNumber(document.getElementById('itegrity'), 1, 100, true, true);
+    </script>
+
+    <!-- main modal handler -->
+    <script>
+        // Parallax effect for hero HUD
+        (function () {
+            const hud = document.querySelector('.hud');
+            if (!hud) return;
+            const onMove = (e) => {
+                const rect = hud.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const dx = (e.clientX - cx) / rect.width;
+                const dy = (e.clientY - cy) / rect.height;
+                hud.style.transform = `perspective(900px) rotateY(${dx * 6}deg) rotateX(${-dy * 6}deg) translateZ(0)`;
+            };
+            const reset = () => { hud.style.transform = 'none'; };
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseleave', reset);
+        })();
+
+        // Neon cursor pulse (GPU-friendly)
+        (function () {
+            const c = document.querySelector('.cursor');
+            if (!c) return;
+            let x = window.innerWidth / 2, y = window.innerHeight / 2; let tx = x, ty = y;
+            const speed = 0.25;
+            const raf = () => { x += (tx - x) * speed; y += (ty - y) * speed; c.style.transform = `translate(${x - 8}px, ${y - 8}px)`; requestAnimationFrame(raf); };
+            window.addEventListener('mousemove', (e) => { tx = e.clientX; ty = e.clientY; });
+            raf();
+        })();
+
+        // Respect reduced motion
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (mq.matches) { document.body.classList.add('no-motion'); }
+    </script>
+    <script id="modals-handler">
+        const body = document.body;
+        let lastActive = null;
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            lastActive = document.activeElement;
+            el.setAttribute('open', '');
+            el.removeAttribute('aria-hidden');
+            body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.removeAttribute('open');
+            el.setAttribute('aria-hidden', 'true');
+            body.style.overflow = '';
+            if (lastActive) lastActive.focus();
+        }
+
+        document.querySelectorAll('[data-modal-target]').forEach(btn => {
+            btn.addEventListener('click', () => openModal(btn.dataset.modalTarget));
+        });
+
+        document.querySelectorAll('[data-close]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const modal = btn.closest('.modal-backdrop');
+                if (modal) closeModal(modal.id);
+            });
+        });
+
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
+            backdrop.addEventListener('click', e => {
+                if (e.target === backdrop) closeModal(backdrop.id);
+            });
+        });
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-backdrop[open]').forEach(el => closeModal(el.id));
+            }
+        });
+    </script>
+    <!-- module-autoice-start -->
+    <div id="ice-blur-overlay" aria-hidden="true"></div>
+    <div id="ice-toast" aria-live="polite">
+        <div class="msg">Auto-ICE Started.</div>
+    </div>
+    <style>
+        /* Sfocatura/smorzamento pagina */
+        #ice-blur-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 2500;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        #ice-blur-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* === ICE micro-panels === */
+        .ice-panel {
+            position: fixed;
+            width: 280px;
+            max-width: 92vw;
+            background: linear-gradient(180deg, rgba(13, 16, 22, .96), rgba(13, 16, 22, .85));
+            border: 1px solid rgba(21, 243, 255, .35);
+            border-radius: 12px;
+            box-shadow: 0 0 0 1px rgba(21, 243, 255, .15), 0 14px 32px rgba(0, 0, 0, .5);
+            z-index: 3000;
+            padding: 10px 12px;
+            color: var(--ink, #dbe6f4);
+            backdrop-filter: blur(6px) saturate(140%);
+        }
+
+        .ice-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px
+        }
+
+        .ice-chip {
+            font: 800 10px/1 "Orbitron", sans-serif;
+            letter-spacing: .9px;
+            color: var(--neon, #15f3ff);
+            text-transform: uppercase
+        }
+
+        .ice-title {
+            margin: 0;
+            font: 700 16px/1.1 "Rajdhani", sans-serif;
+            flex: 1
+        }
+
+        .ice-close {
+            width: 28px;
+            height: 28px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid rgba(21, 243, 255, .25);
+            background: linear-gradient(180deg, rgba(21, 243, 255, .08), rgba(21, 243, 255, .03));
+        }
+
+        .ice-close:hover {
+            box-shadow: 0 0 12px rgba(21, 243, 255, .2)
+        }
+
+        .ice-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0
+        }
+
+        .ice-bar {
+            --bg: #0c1220;
+            --fg: var(--neon, #15f3ff);
+            height: 10px;
+            flex: 1;
+            border-radius: 999px;
+            background: var(--bg);
+            outline: 1px solid rgba(21, 243, 255, .25);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ice-bar>span {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            background: linear-gradient(90deg, var(--fg), rgba(255, 43, 214, .8));
+            box-shadow: 0 0 18px rgba(21, 243, 255, .35);
+            transition: width .12s linear;
+        }
+
+        .ice-pct {
+            width: 46px;
+            text-align: right;
+            font: 700 12px/1 "Orbitron", sans-serif;
+            color: #b7c6d8
+        }
+
+        .ice-status {
+            font: 700 11px/1 "Orbitron", sans-serif;
+            letter-spacing: .8px;
+            color: #93a3b5;
+            margin-top: 6px;
+            text-transform: uppercase
+        }
+
+        .ice-ok {
+            color: #16ff6e
+        }
+
+        .ice-fail {
+            color: #ff5a7a
+        }
+
+        #ice-toast {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            z-index: 4000;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+
+        #ice-toast .msg {
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(21, 243, 255, .35);
+            background: linear-gradient(180deg, rgba(13, 16, 22, .96), rgba(13, 16, 22, .85));
+            box-shadow: 0 0 0 1px rgba(21, 243, 255, .15), 0 14px 32px rgba(0, 0, 0, .5);
+            font: 800 16px/1 "Orbitron", sans-serif;
+            letter-spacing: 1px;
+            color: var(--ink, #dbe6f4);
+            text-transform: uppercase;
+        }
+
+        #ice-toast.show {
+            opacity: 1;
+        }
+    </style>
+    <script>
+        /** Sottomoduli di default */
+        const ICE_DEFAULT_MODULES = [
+            "Firewall Level 1",
+            "Firewall Level 2",
+            "Firewall Level 3",
+            "Monitor Network",
+            "Port Filtering",
+            "Blocking External IPs",
+            "Prevent Data Breach",
+            "Deep Packet Inspection",
+            "AI Threat Detection",
+            "Quantum Encryption Layer",
+            "Protocol Anomaly Scan",
+            "DNS Hijack Prevention",
+            "Malware Signature Sweep",
+            "Zero-Day Exploit Shield",
+            "Access Token Purge",
+            "Session Hijack Blocker",
+            "Remote Shell Termination",
+            "API Endpoint Lockdown",
+            "Darknet Beacon Trace",
+            "Honeypot Node Activation",
+            "Intrusion Pattern Analysis",
+            "Privilege Escalation Trap",
+            "Keylogger Neutralizer",
+            "Geo-IP Access Restriction",
+            "SSL Certificate Revalidation",
+            "Botnet Command Intercept",
+            "Data Exfiltration Monitor",
+            "Phishing Vector Block",
+            "Sandboxed Payload Isolation",
+            "Rootkit Eradication Module"
+        ];
+
+        let __icePanels = [];
+
+        /** Crea e posiziona un micro-pannello ICE */
+        function createIcePanel(name, pos) {
+            const el = document.createElement('div');
+            el.className = 'ice-panel';
+            el.style.left = pos.x + 'px';
+            el.style.top = pos.y + 'px';
+
+            el.innerHTML = `
+    <div class="ice-head">
+      <span class="ice-chip">AUTO-ICE</span>
+      <h3 class="ice-title">${name}</h3>
+      <button class="ice-close" aria-label="Chiudi">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" d="M18.3 5.7 12 12l-6.3-6.3-1.4 1.4L10.6 13 4.3 19.3l1.4 1.4L12 14.4l6.3 6.3 1.4-1.4L13.4 13l6.3-6.3z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="ice-row">
+      <div class="ice-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span></span>
+      </div>
+      <div class="ice-pct">0%</div>
+    </div>
+    <div class="ice-status">Initializing…</div>
+  `;
+
+            el.querySelector('.ice-close').addEventListener('click', () => removeIcePanel(el));
+            document.body.appendChild(el);
+            return el;
+        }
+
+        /** Avanza la progress bar; se FAIL, riparte finché OK */
+        function runProgress(panel) {
+            return new Promise(resolve => {
+                const bar = panel.querySelector('.ice-bar > span');
+                const pct = panel.querySelector('.ice-pct');
+                const status = panel.querySelector('.ice-status');
+                const rb = panel.querySelector('.ice-bar');
+
+                function startCycle(attempt = 1) {
+                    const duration = 2000 + Math.random() * 3000; // 2-6s
+                    const start = performance.now();
+
+                    status.textContent = attempt > 1 ? `Retrying… (${attempt})` : 'Scanning…';
+                    status.classList.remove('ice-ok', 'ice-fail');
+                    bar.style.width = '0%';
+                    pct.textContent = '0%';
+                    rb.setAttribute('aria-valuenow', 0);
+
+                    function tick(t) {
+                        const p = Math.min(1, (t - start) / duration);
+                        const val = Math.floor(p * 100);
+                        bar.style.width = val + '%';
+                        pct.textContent = val + '%';
+                        rb.setAttribute('aria-valuenow', val);
+
+                        if (p < 1) {
+                            requestAnimationFrame(tick);
+                        } else {
+                            const ok = Math.random() > 0.10; // 90% success rate
+                            status.textContent = ok ? 'Completed' : 'Blocked';
+                            status.classList.toggle('ice-ok', ok);
+                            status.classList.toggle('ice-fail', !ok);
+
+                            if (ok) {
+                                resolve(true);
+                            } else {
+                                // Attendere un attimo prima del retry per l'effetto
+                                setTimeout(() => startCycle(attempt + 1), 600);
+                            }
+                        }
+                    }
+                    requestAnimationFrame(tick);
+                }
+
+                startCycle();
+            });
+        }
+
+
+        /** Rimuove un pannello */
+        function removeIcePanel(panel) {
+            panel.remove();
+            __icePanels = __icePanels.filter(p => p !== panel);
+        }
+
+        /** Posizioni “sparse” sullo schermo (evita sovrapposizioni grossolane) */
+        function computePositions(n) {
+            const mar = 12, panelW = 280, panelH = 120;
+            const vw = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            const vh = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+
+            // Genera N posizioni casuali; 30% dei pannelli “si impilano” sopra altri
+            const pos = [];
+            for (let i = 0; i < n; i++) {
+                let x, y;
+                if (i > 0 && Math.random() < 0.30) {
+                    // impila su uno esistente con jitter
+                    const base = pos[Math.floor(Math.random() * i)];
+                    x = base.x + Math.round((Math.random() - 0.5) * 24);
+                    y = base.y + Math.round((Math.random() - 0.5) * 16);
+                } else {
+                    x = Math.round(mar + Math.random() * Math.max(0, vw - panelW - mar * 2));
+                    y = Math.round(mar + Math.random() * Math.max(0, vh - panelH - mar * 2));
+                }
+                x = Math.min(vw - panelW - mar, Math.max(mar, x));
+                y = Math.min(vh - panelH - mar, Math.max(mar, y));
+                pos.push({ x, y });
+            }
+            return pos;
+        }
+
+        function showIceToast(text = "Auto-ICE Started.") {
+            const toast = document.getElementById('ice-toast');
+            if (!toast) return;
+            toast.querySelector('.msg').textContent = text;
+            toast.classList.add('show');
+            // resta visibile ~2s, poi svanisce
+            setTimeout(() => {
+                toast.classList.remove('show');
+                document.getElementById('ice-blur-overlay')?.classList.remove('show');
+            }, 2000);
+        }
+
+        /** Avvio: crea pannelli per i moduli e li fa “caricare” */
+        async function autoIceStart(modules = ICE_DEFAULT_MODULES) {
+            document.getElementById('ice-blur-overlay')?.classList.add('show');
+            // Pulisci eventuali pannelli già aperti
+            autoIceStop();
+
+            const positions = computePositions(modules.length);
+
+            modules.forEach((name, i) => {
+                const p = createIcePanel(name, positions[i]);
+                // stacking casuale (anche sopra/sotto)
+                p.style.zIndex = String(3000 + Math.floor(Math.random() * 800));
+                // piccola animazione d’ingresso
+                p.animate(
+                    [{ transform: 'translateY(-6px)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }],
+                    { duration: 180, easing: 'ease-out' }
+                );
+                __icePanels.push(p);
+            });
+
+            // Esegui tutti i progress con avvio leggermente sfasato
+            const runs = __icePanels.map((panel, i) =>
+                new Promise(res => setTimeout(() => runProgress(panel).then(res), i * 120))
+            );
+
+            // Attendi completamento di TUTTI
+            await Promise.all(runs);
+
+            // Chiudi pannelli e mostra toast
+            autoIceStop();
+            showIceToast("Auto-ICE Started.");
+        }
+
+        /** Chiude tutti i pannelli ICE */
+        function autoIceStop() {
+            __icePanels.forEach(p => p.remove());
+            __icePanels = [];
+        }
+
+        /** Listener globale: click su qualunque .module-autoice-start */
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.module-autoice-start');
+            if (!btn) return;
+            // Puoi passare moduli personalizzati con data-modules='["A","B"]'
+            const custom = btn.getAttribute('data-modules');
+            const list = custom ? JSON.parse(custom) : ICE_DEFAULT_MODULES;
+            autoIceStart(list);
+        });
+    </script>
+    <script>
+        // Avvio automatico via query string: ?start-autoice=1
+        (function () {
+            const qs = new URLSearchParams(window.location.search);
+            if (qs.get('start-autoice') === 'true') {
+                const modsParam = qs.get('modules'); // es: ?modules=Firewall%20Level%201,Monitor%20Network
+                const list = modsParam
+                    ? modsParam.split(',').map(s => s.trim()).filter(Boolean)
+                    : ICE_DEFAULT_MODULES;
+
+                const run = () => autoIceStart(list);
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', run, { once: true });
+                } else {
+                    run();
+                }
+            }
+        })();
+    </script>
+    <!-- netrunner breach -->
+    <div id="netrunner-overlay">
+        <div class="netrunner-glitch" data-text="SYSTEM BREACH DETECTED">SYSTEM BREACH DETECTED</div>
+        <div style="margin-top:20px; font-size:14px; opacity:0.8;">Shutting down...</div>
+    </div>
+    <style>
+        /* Overlay attacco netrunner */
+        #netrunner-overlay {
+            position: fixed;
+            inset: 0;
+            background: black;
+            z-index: 9999;
+            color: #00ff9c;
+            font-family: "Orbitron", monospace;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(18px, 2vw, 26px);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+        }
+
+        /* Effetto glitch testo */
+        .netrunner-glitch {
+            position: relative;
+        }
+
+        .netrunner-glitch::before,
+        .netrunner-glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0);
+        }
+
+        .netrunner-glitch::before {
+            animation: glitchTop 1s infinite linear alternate-reverse;
+            color: #ff00e5;
+        }
+
+        .netrunner-glitch::after {
+            animation: glitchBot 1s infinite linear alternate-reverse;
+            color: #00eaff;
+        }
+
+        @keyframes glitchTop {
+            0% {
+                clip: rect(0, 900px, 0, 0);
+                transform: translate(-2px, -2px);
+            }
+
+            50% {
+                clip: rect(0, 900px, 900px, 0);
+                transform: translate(2px, 2px);
+            }
+
+            100% {
+                clip: rect(0, 900px, 0, 0);
+                transform: translate(-1px, -1px);
+            }
+        }
+
+        @keyframes glitchBot {
+            0% {
+                clip: rect(900px, 900px, 900px, 0);
+                transform: translate(2px, 2px);
+            }
+
+            50% {
+                clip: rect(0, 900px, 900px, 0);
+                transform: translate(-2px, -2px);
+            }
+
+            100% {
+                clip: rect(900px, 900px, 900px, 0);
+                transform: translate(1px, 1px);
+            }
+        }
+
+        /* Scanline veloci */
+        #netrunner-overlay::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(to bottom,
+                    rgba(0, 255, 156, 0.05) 0px,
+                    rgba(0, 255, 156, 0.05) 2px,
+                    transparent 3px,
+                    transparent 4px);
+            animation: scanlines 0.1s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: 0 4px;
+            }
+        }
+    </style>
+    <script>
+        function netrunnerAttack() {
+            const overlay = document.getElementById('netrunner-overlay');
+            overlay.style.pointerEvents = 'auto';
+            overlay.style.opacity = '1';
+
+            // Glitch della pagina
+            document.body.style.transition = 'filter 0.2s ease';
+            let glitchInterval = setInterval(() => {
+                document.body.style.filter = `contrast(${1 + Math.random()}) hue-rotate(${Math.random() * 360}deg)`;
+                setTimeout(() => document.body.style.filter = 'none', 100);
+            }, 150);
+
+            // Dopo 3 secondi, schermata nera definitiva
+            setTimeout(() => {
+                clearInterval(glitchInterval);
+                document.body.innerHTML = ''; // distrugge il contenuto
+                document.body.style.background = 'black';
+                document.body.appendChild(overlay);
+                overlay.style.opacity = '1';
+                var thisPage = window.location.href;
+                window.location.href = thisPage + '?start-autoice=true';
+            }, 3000);
+        }
+    </script>
+
+    <div id="hidden-functions" style="display: none;">
+        <pre>
+            // Inizia conversazione con mittente
+            initPhoneConversation("Dave Kresnik");
+
+
+            // Messaggio iniziale ricevuto
+            receivePhoneMessage(message, {
+                photoUrl: "Dave_Kresnik_pic.png"
+            });
+
+            // Rispondi
+            sendPhoneReply("AA");
+
+            // Ricevi altro messaggio
+            receivePhoneMessage("AA");
+
+            /* netrunner */
+            netrunnerAttack()
+        </pre>
+    </div>
+</body>
+
+</html>

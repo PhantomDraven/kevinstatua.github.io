@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="it">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Lista Oggetti Magici (DMG)</title>
+    <style>
+        :root {
+            --bg: #0b1020;
+            --card: rgba(255, 255, 255, 0.06);
+            --border: rgba(255, 255, 255, 0.14);
+            --text: rgba(255, 255, 255, 0.92);
+            --muted: rgba(255, 255, 255, 0.7);
+            --chip: rgba(255, 255, 255, 0.10);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --radius: 16px;
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            color: var(--text);
+            background: radial-gradient(1200px 800px at 20% 10%, rgba(120, 140, 255, 0.18), transparent 60%),
+                radial-gradient(900px 600px at 80% 20%, rgba(255, 140, 180, 0.12), transparent 55%),
+                var(--bg);
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 18px 40px;
+        }
+
+        header {
+            display: grid;
+            gap: 10px;
+            padding: 18px 18px 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 20px;
+            letter-spacing: 0.2px;
+        }
+
+        .sub {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.45;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 220px 180px 160px;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.22);
+            color: var(--text);
+            outline: none;
+        }
+
+        .input::placeholder {
+            color: rgba(255, 255, 255, 0.55);
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--chip);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .chip b {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .card {
+            margin-top: 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 920px;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: rgba(10, 14, 30, 0.95);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 12px;
+            text-align: left;
+            font-size: 12px;
+            letter-spacing: 0.35px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.78);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        thead th .sort {
+            font-family: var(--mono);
+            opacity: 0.75;
+            margin-left: 6px;
+        }
+
+        tbody td {
+            padding: 12px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            vertical-align: top;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .rarity {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.22);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.80);
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            display: inline-block;
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .mono {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        footer {
+            margin-top: 12px;
+            color: var(--muted);
+            font-size: 12px;
+            padding: 0 6px;
+            line-height: 1.5;
+        }
+
+        button {
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <header>
+            <h1>Lista Oggetti Magici (Range Prezzi DMG)</h1>
+            <p class="sub">
+                Tabella unica con <b>Nome</b>, <b>Rarità</b>, <b>Descrizione</b>, <b>Attunement</b> e <b>Prezzo
+                    (DMG)</b>.
+                Ordinata per rarità (Common → Uncommon → Rare → Very Rare). Puoi cercare, filtrare e ordinare cliccando
+                sulle intestazioni.
+            </p>
+
+            <div class="controls">
+                <input id="q" class="input" type="search"
+                    placeholder="Cerca per nome o descrizione (es. 'bow', 'protection', '+2')…" />
+                <select id="rarity">
+                    <option value="">Tutte le rarità</option>
+                    <option value="Common">Common</option>
+                    <option value="Uncommon">Uncommon</option>
+                    <option value="Rare">Rare</option>
+                    <option value="Very Rare">Very Rare</option>
+                </select>
+                <select id="attune">
+                    <option value="">Attunement: tutti</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+                <button id="reset" type="button">Reset filtri</button>
+            </div>
+
+            <div class="stats">
+                <span class="chip">Risultati: <b id="count">0</b></span>
+                <span class="chip">Ordinamento: <b id="sortState">Rarità ↑</b></span>
+                <span class="chip muted">Prezzi: Common 50–100 · Uncommon 101–500 · Rare 501–5.000 · Very Rare
+                    5.001–50.000</span>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="table-wrap">
+                <table id="tbl" aria-label="Lista oggetti magici">
+                    <thead>
+                        <tr>
+                            <th data-key="name">Nome <span class="sort" id="s-name"></span></th>
+                            <th data-key="rarity">Rarità <span class="sort" id="s-rarity"></span></th>
+                            <th data-key="desc">Descrizione <span class="sort" id="s-desc"></span></th>
+                            <th data-key="attune">Attunement <span class="sort" id="s-attune"></span></th>
+                            <th data-key="price">Prezzo (DMG) <span class="sort" id="s-price"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            Nota: “Glimmering Moonbow” e “Bow of Conflagration” sono trattati come oggetti a rarità assegnata dal DM
+            (non necessariamente RAW).
+            “Barrier Tattoo (Rare)” è lasciato con la label fornita, ma il prezzo segue la rarità mostrata in tabella.
+        </footer>
+    </div>
+
+    <script>
+    // --- DATA ---------------------------------------------------------------
+    const rarityOrder = { "Common": 0, "Uncommon": 1, "Rare": 2, "Very Rare": 3 };
+    const rarityDot = {
+      "Common": "#cbd5e1",
+      "Uncommon": "#34d399",
+      "Rare": "#60a5fa",
+      "Very Rare": "#a78bfa"
+    };
+
+    const items = [
+      // Common
+      {
+        name: "Spell Scroll (1st level)",
+        rarity: "Common",
+        desc: "Pergamena con incantesimo di 1° livello (uso singolo).",
+        attune: "No",
+        price: "50–100 gp"
+      },
+
+      // Uncommon
+      { name: "Bag of Holding", rarity: "Uncommon", desc: "Contenitore extradimensionale (fino a 500 lb).", attune: "No", price: "101–500 gp" },
+      { name: "Bag of Tricks", rarity: "Uncommon", desc: "Evoca creature casuali tramite oggetti pelosi.", attune: "No", price: "101–500 gp" },
+      { name: "Bracers of Archery", rarity: "Uncommon", desc: "+2 ai danni con archi lunghi e corti.", attune: "Yes", price: "101–500 gp" },
+      { name: "Boots of Elvenkind", rarity: "Uncommon", desc: "Vantaggio alle prove di Stealth basate su Destrezza (movimento silenzioso).", attune: "No", price: "101–500 gp" },
+      { name: "Cloak of Elvenkind", rarity: "Uncommon", desc: "Vantaggio a Stealth; chi ti osserva ha svantaggio a Perception.", attune: "Yes", price: "101–500 gp" },
+      { name: "Cloak of Protection", rarity: "Uncommon", desc: "+1 CA e +1 a tutti i tiri salvezza.", attune: "Yes", price: "101–500 gp" },
+      { name: "Sentinel Shield", rarity: "Uncommon", desc: "Vantaggio a Iniziativa e Perception.", attune: "No", price: "101–500 gp" },
+      { name: "Eyes of the Eagle", rarity: "Uncommon", desc: "Vantaggio a Perception basata sulla vista; vista a lunga distanza.", attune: "No", price: "101–500 gp" },
+      { name: "Weapon +1", rarity: "Uncommon", desc: "Arma magica +1 a colpire e ai danni.", attune: "No", price: "101–500 gp" },
+      { name: "Armor +1", rarity: "Uncommon", desc: "Armatura magica +1 alla CA.", attune: "No", price: "101–500 gp" },
+      { name: "Shield +1", rarity: "Uncommon", desc: "Scudo magico +1 alla CA.", attune: "No", price: "101–500 gp" },
+      { name: "Dragon’s Wrath Bow – Slumbering", rarity: "Uncommon", desc: "Arco +1 con danni elementali draconici minori.", attune: "Yes", price: "101–500 gp" },
+      { name: "Spell Scroll (2nd level)", rarity: "Uncommon", desc: "Pergamena con incantesimo di 2° livello (uso singolo).", attune: "No", price: "101–500 gp" },
+      { name: "Spell Scroll (3rd level)", rarity: "Uncommon", desc: "Pergamena con incantesimo di 3° livello (uso singolo).", attune: "No", price: "101–500 gp" },
+
+      // Rare
+      { name: "Glimmering Moonbow", rarity: "Rare", desc: "Longbow +1/+2 con danni radianti e tematica lunare.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Bow of Conflagration", rarity: "Rare", desc: "Longbow con danni da fuoco aggiuntivi ed effetti incendiari.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Ring of Protection", rarity: "Rare", desc: "+1 CA e +1 a tutti i tiri salvezza.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Moon Sickle (+1)", rarity: "Rare", desc: "Focus druidico/ranger: bonus a incantesimi e cure.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Amulet of the Devout (+1)", rarity: "Rare", desc: "Focus divino: bonus a CD, tiri per colpire e Channel Divinity.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Weapon +2", rarity: "Rare", desc: "Arma magica +2 a colpire e ai danni.", attune: "No", price: "501–5.000 gp" },
+      { name: "Armor +2", rarity: "Rare", desc: "Armatura magica +2 alla CA.", attune: "No", price: "501–5.000 gp" },
+      { name: "Shield +2", rarity: "Rare", desc: "Scudo magico +2 alla CA.", attune: "No", price: "501–5.000 gp" },
+      { name: "Dragon’s Wrath Bow – Stirring", rarity: "Rare", desc: "Arco +2 con danni draconici potenziati.", attune: "Yes", price: "501–5.000 gp" },
+      { name: "Spell Scroll (4th level)", rarity: "Rare", desc: "Pergamena con incantesimo di 4° livello (uso singolo).", attune: "No", price: "501–5.000 gp" },
+
+      // Very Rare
+      { name: "Oathbow", rarity: "Very Rare", desc: "Arco del giuramento: vantaggio, +3d6 danni, ignora cover e distanza.", attune: "Yes", price: "5.001–50.000 gp" },
+      { name: "Barrier Tattoo (Rare)", rarity: "Very Rare", desc: "Tatuaggio difensivo: CA elevata senza armatura.", attune: "Yes", price: "5.001–50.000 gp" },
+      { name: "Weapon +3", rarity: "Very Rare", desc: "Arma magica +3 a colpire e ai danni.", attune: "No", price: "5.001–50.000 gp" },
+      { name: "Armor +3", rarity: "Very Rare", desc: "Armatura magica +3 alla CA.", attune: "No", price: "5.001–50.000 gp" },
+      { name: "Shield +3", rarity: "Very Rare", desc: "Scudo magico +3 alla CA.", attune: "No", price: "5.001–50.000 gp" },
+      { name: "Dragon’s Wrath Bow – Wakened", rarity: "Very Rare", desc: "Arco +2/+3 con potenti effetti draconici passivi.", attune: "Yes", price: "5.001–50.000 gp" }
+    ];
+
+    // --- STATE --------------------------------------------------------------
+    let state = {
+      q: "",
+      rarity: "",
+      attune: "",
+      sortKey: "rarity",
+      sortDir: "asc"
+    };
+
+    // --- HELPERS ------------------------------------------------------------
+    const $ = (id) => document.getElementById(id);
+
+    function normalize(s) {
+      return (s || "").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+    }
+
+    function compare(a, b, key) {
+      const dir = state.sortDir === "asc" ? 1 : -1;
+
+      if (key === "rarity") {
+        const ra = rarityOrder[a.rarity] ?? 99;
+        const rb = rarityOrder[b.rarity] ?? 99;
+        if (ra !== rb) return (ra - rb) * dir;
+        return a.name.localeCompare(b.name, "it") * dir;
+      }
+      if (key === "attune") {
+        if (a.attune !== b.attune) return (a.attune === "Yes" ? -1 : 1) * dir;
+        return a.name.localeCompare(b.name, "it") * dir;
+      }
+      if (key === "price") {
+        // Ordina per rarità come proxy (visto che il range è testuale)
+        const ra = rarityOrder[a.rarity] ?? 99;
+        const rb = rarityOrder[b.rarity] ?? 99;
+        if (ra !== rb) return (ra - rb) * dir;
+        return a.name.localeCompare(b.name, "it") * dir;
+      }
+
+      const va = (a[key] || "").toString();
+      const vb = (b[key] || "").toString();
+      return va.localeCompare(vb, "it", { sensitivity: "base" }) * dir;
+    }
+
+    function rarityBadge(r) {
+      const color = rarityDot[r] || "#cbd5e1";
+      return `
+        <span class="rarity" title="${r}">
+          <span class="dot" style="background:${color}"></span>
+          ${r}
+        </span>
+      `;
+    }
+
+    function applyFilters(list) {
+      const q = normalize(state.q);
+      return list.filter(it => {
+        const matchesQ = !q || normalize(it.name + " " + it.desc).includes(q);
+        const matchesRarity = !state.rarity || it.rarity === state.rarity;
+        const matchesAttune = !state.attune || it.attune === state.attune;
+        return matchesQ && matchesRarity && matchesAttune;
+      });
+    }
+
+    function render() {
+      const filtered = applyFilters(items).sort((a,b) => compare(a,b, state.sortKey));
+      $("count").textContent = filtered.length.toString();
+      $("sortState").textContent = sortLabel();
+
+      const rows = filtered.map(it => `
+        <tr>
+          <td><b>${escapeHtml(it.name)}</b></td>
+          <td>${rarityBadge(it.rarity)}</td>
+          <td class="muted">${escapeHtml(it.desc)}</td>
+          <td class="mono">${it.attune}</td>
+          <td class="mono">${escapeHtml(it.price)}</td>
+        </tr>
+      `).join("");
+
+      $("body").innerHTML = rows || `
+        <tr>
+          <td colspan="5" class="muted">Nessun risultato. Prova a cambiare filtri o ricerca.</td>
+        </tr>
+      `;
+
+      updateSortIndicators();
+    }
+
+    function sortLabel() {
+      const arrow = state.sortDir === "asc" ? "↑" : "↓";
+      const keyName = {
+        name: "Nome",
+        rarity: "Rarità",
+        desc: "Descrizione",
+        attune: "Attunement",
+        price: "Prezzo"
+      }[state.sortKey] || state.sortKey;
+      return `${keyName} ${arrow}`;
+    }
+
+    function updateSortIndicators() {
+      ["name","rarity","desc","attune","price"].forEach(k => {
+        const el = document.getElementById("s-" + k);
+        if (!el) return;
+        el.textContent = (state.sortKey === k) ? (state.sortDir === "asc" ? "↑" : "↓") : "";
+      });
+    }
+
+    function escapeHtml(str) {
+      return (str || "").replace(/[&<>"']/g, m => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", "\"":"&quot;", "'":"&#039;"
+      }[m]));
+    }
+
+    // --- EVENTS -------------------------------------------------------------
+    $("q").addEventListener("input", (e) => { state.q = e.target.value; render(); });
+    $("rarity").addEventListener("change", (e) => { state.rarity = e.target.value; render(); });
+    $("attune").addEventListener("change", (e) => { state.attune = e.target.value; render(); });
+
+    $("reset").addEventListener("click", () => {
+      state.q = ""; state.rarity = ""; state.attune = "";
+      $("q").value = ""; $("rarity").value = ""; $("attune").value = "";
+      render();
+    });
+
+    document.querySelectorAll("thead th").forEach(th => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.key;
+        if (!key) return;
+        if (state.sortKey === key) {
+          state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+        } else {
+          state.sortKey = key;
+          state.sortDir = (key === "rarity") ? "asc" : "asc";
+        }
+        render();
+      });
+    });
+
+    // --- INIT ---------------------------------------------------------------
+    render();
+    </script>
+</body>
+
+</html>
